@@ -1,2 +1,56 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+//Tratando Route Params
+const express = require('express');
+
+const server = express();
+
+server.use(express.json())
+//localhost:3000/exame/2    //Lista um unico exame
+//localhost:3000/exame      //Listatodos os exame
+//localhost:3000/exame/2   //altera um exame
+
+const examesArray=[]
+
+//Rota para listar um único exame
+server.get('/exame/:indiceInput', (req, res) => {
+const {indiceInput} = req.params
+
+return res.json({ exame: `Campo do formulario ${examesArray[indiceInput]}` })
+
+})
+//Rota para listar TODOS os exames
+server.get('/exame', (req, res) => {
+    return res.json(examesArray);
+
+})
+//Rota para criar novo exame - POST - utilizar REQUST BODY
+server.post('/exame', (req, res) => {
+    const { nomeExame,dataPaciente, cpf, dataConsulta, email, descricao } = req.body;
+    examesArray.push(nomeExame, dataPaciente, cpf, dataConsulta, email, descricao);
+
+    return res.json(examesArray);
+})
+
+    //Rota para alterar exame - PUT - será utilizado BODY
+server.put('/exame/:indice', (req, res) => {
+    const { indice } = req.params;
+    const { nomeExame, dataPaciente, cpf, dataConsulta, email, descricao } = req.body;
+    examesArray[indice,0]=nomeExame;
+    examesArray[indice,1]=dataPaciente;
+    examesArray[indice,2]=cpf;
+    examesArray[indice,3]=dataConsulta;
+    examesArray[indice,4]=email;
+    examesArray[indice,5]=descricao;
+
+    return res.json(examesArray);
+})
+
+//Rota para deletar exame - DELETE -
+server.delete('/exame/:indice', (req, res) => {
+const { indice } = req.params;
+examesArray.splice(indice,6);
+return res.json(examesArray);
+})
+
+server.listen(3000);
